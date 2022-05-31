@@ -1,0 +1,15 @@
+2022-05-20 12:05:43 Cannot create products array: fclose() expects parameter 1 to be resource, bool given;
+2022-05-21 17:42:34 Cannot create final associative array: fclose() expects parameter 1 to be resource, bool given;
+2022-05-21 17:43:19 Cannot create final associative array: fclose() expects parameter 1 to be resource, bool given;
+2022-05-21 17:44:11 saveArrayAsCsv error: fputcsv() expects parameter 1 to be resource, bool given;
+2022-05-21 17:44:57 saveArrayAsCsv error: fputcsv() expects parameter 1 to be resource, bool given;
+2022-05-21 17:45:17 saveArrayAsCsv error: fputcsv() expects parameter 1 to be resource, bool given;
+2022-05-22 16:17:56 saveArrayAsCsv error: fputcsv() expects parameter 1 to be resource, bool given;
+2022-05-25 18:26:53 saveArrayAsCsv error: array_keys() expects parameter 1 to be array, null given;
+2022-05-25 18:36:33 saveArrayAsCsv error: array_keys() expects parameter 1 to be array, null given;
+2022-05-25 18:38:53 saveArrayAsCsv error: array_keys() expects parameter 1 to be array, null given;
+2022-05-25 19:08:38 Cannot create final associative array: Błąd w pliku CSV. Sprawdź czy żadne pole nie zawiera wiecej niż dopuszczalne 50 000 znaków;
+2022-05-25 19:15:04 Cannot create final associative array: test Product failed;
+2022-05-25 19:16:58 Cannot create final associative array: testProduct failed;
+2022-05-25 19:59:08 Cannot create final associative array: testProduct failed;
+2022-05-25 20:12:50 Cannot create final associative array: testProduct failed. Check as if number of characters in CSV line is not greater than50000;

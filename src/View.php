@@ -6,20 +6,24 @@ namespace App;
 
 class View
 {
+    private string $copyPhotos = '';
+    private string $copyPictures = '';
+    private string $copyStyles = '';
+    private string $copyBold = '';
+    private array $errorMessages = [];
+
     public function render(string $page, array $params): void
     {
+        $this->isCheckboxChecked($params);
+        $this->errorMessages = require_once('./config/errorsMsg.php');
         require_once('./templates/layout.php');
     }
 
-    public function getConversionParams(): array
+    private function isCheckboxChecked($params): void
     {
-        $conversionParams = [];
-
-        $conversionParams['checkPhotos'] = isset($_POST['check-photos']) ? true : false;
-        $conversionParams['checkDescription'] = isset($_POST['check-description']) ? true : false;
-
-        $conversionParams['shopAddress'] = isset($_POST['shop-address']) ? $_POST['shop-address'] : '';
-
-        return $conversionParams;
+        $this->copyPhotos = isset($params['copy-photos']) ? 'checked' : '';
+        $this->copyPictures = isset($params['copy-pictures']) ? 'checked' : '';
+        $this->copyStyles = isset($params['copy-styles']) ? 'checked' : '';
+        $this->copyBold = isset($params['copy-bold']) ? 'checked' : '';
     }
 }

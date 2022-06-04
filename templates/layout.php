@@ -6,8 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Konwerter danych</title>
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
+    <link rel="stylesheet" href="/assets/css/style.css">
 </head>
 
 <body>
@@ -17,15 +18,13 @@
         </div>
     </div>
     <header>
-        <div class="container">
-            <div class="row">
-                <div class="col-sm-12 col-md-10 offset-md-1 col-lg-6 offset-lg-3 mb-3 text-center">
-                    <h1>Konwerter danych</h1>
-                    <p class="fs-1">Shoper-PrestaShop</p>
-                </div>
+        <div class="d-flex position-relative justify-content-center my-4 ">
+            <div>
+                <h1>Konwerter danych</h1>
+                <h2>Shoper <span class="fs-1 text-primary">&#8669;</span> PrestaShop</h2>
+                <a href="/" class="stretched-link"></a>
             </div>
         </div>
-
     </header>
     <main>
         <?php
@@ -33,6 +32,10 @@
         ?>
     </main>
     <footer></footer>
+    <?php
+    require_once("./templates/pages/modal.php");
+    ?>
+
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
     <script src="/assets/js/converter.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>

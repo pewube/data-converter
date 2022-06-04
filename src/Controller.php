@@ -5,39 +5,71 @@ declare(strict_types=1);
 namespace App;
 
 require_once('View.php');
-require_once('ShoperToPrestaData.php');
 require_once('Request.php');
+require_once('Database.php');
+require_once('Converter.php');
+require_once('Creator.php');
+require_once('Validator.php');
+
+
 
 class Controller
 {
-    private static array $configuration = [];
+    private static array $config = [];
 
     private const DEFAULT_ACTION = 'home';
     private Request $request;
     private View $view;
-    private string $fileLink = '';
+    private Database $database;
+    private Converter $converter;
+    private Creator $creator;
 
-    public static function initConfiguration(array $configuration): void
+    public static function initConfiguration(array $config): void
     {
-        self::$configuration = $configuration;
+        self::$config = $config;
     }
 
     public function run()
     {
-        $this->reCaptcha();
-        // $this->initConversion();
+        $captchaSecretKey = self::$config['captchaSecretKey'] ?? '';
+        $capchaResponse = $this->request->postParam('g-recaptcha-response') ?? '';
 
+        switch (Validator::validate($captchaSecretKey, $capchaResponse)) {
+            case 1:
+                $this->initConversion();
+                $fileName = $this->creator->getFileName();
+                if (isset($fileName)) {
+                    header('Location: /?download=' . $fileName);
+                }
+                break;
+            case -1:
+                header('Location: /?error=captchaFailed');
+                exit;
+                break;
+            case 0:
+                if ($this->request->filesParam('shoper-csv')) {
+                    header('Location: /?error=noCaptcha');
+                    exit;
+                }
+                break;
+        }
 
         switch ($this->getAction()) {
-            case 'download':
-                $page = 'download';
+            case 'help':
+                $page = 'help';
+                $viewParams = [];
                 break;
             default:
                 $page = 'home';
                 $viewParams = [
-                    'fileLink' => $this->fileLink,
-                    'captchaSiteKey' => self::$configuration['captchaSiteKey'],
-                    'download' => $this->request->getParam('download')
+                    'captchaSiteKey' => self::$config['captchaSiteKey'],
+                    'filePath' => self::$config['downloadDir'],
+                    'download' => $this->request->getParam('download'),
+                    'error' => $this->request->getParam('error'),
+                    'copy-photos' => $this->request->getParam('copy-photos'),
+                    'copy-pictures' => $this->request->getParam('copy-pictures'),
+                    'copy-styles' => $this->request->getParam('copy-styles'),
+                    'copy-bold' => $this->request->getParam('copy-bold'),
                 ];
                 break;
         }
@@ -49,28 +81,6 @@ class Controller
     {
         $this->request = $request;
         $this->view = new View();
-    }
-
-    private function reCaptcha()
-    {
-        $data = $this->request->postParam('g-recaptcha-response');
-
-        if (isset($data) && !empty($data)) {
-            $googleUrl = 'https://www.google.com/recaptcha/api/siteverify?secret=' . self::$configuration['captchaSecretKey'] . '&response=' . $data;
-            $replaceResponse = file_get_contents($googleUrl);
-            $responseData = json_decode($replaceResponse, true);
-
-            if ($responseData['success'] === true) {
-
-                $this->initConversion();
-            } else {
-                // komunikat !
-                echo 'Weryfikacja CAPTCHA nie powiodła się, spróbuj ponownie.';
-            }
-        } else {
-            // komunikat ! i ramka wokół CAPTCHA
-            echo 'Potwierdź, że nie jesteś robotem';
-        }
     }
 
     private function initConversion(): void
@@ -85,21 +95,39 @@ class Controller
 
         if (!empty($this->request->postParam('submit'))) {
 
-            if ($this->request->filesParam('shoper-csv')['size'] && (int)$this->request->filesParam('shoper-csv')['size'] < 10485761) {
+            switch ($this->request->filesParam('shoper-csv')['error']) {
+                case 0:
+                    if ((in_array($this->request->filesParam('shoper-csv')['type'], $csv_mimetypes))) {
+                        if (
+                            (int)$this->request->filesParam('shoper-csv')['size'] < self::$config['maxUploadFileSize']
 
-                if (
-                    (in_array($this->request->filesParam('shoper-csv')['type'], $csv_mimetypes)) &&
-                    ($this->request->filesParam('shoper-csv')['error'] == UPLOAD_ERR_OK)
-                ) {
-                    $prestaData = new ShoperToPrestaData($this->getInputFileName(), $this->view->getConversionParams());
-                    $this->fileLink = $prestaData->getFileLink();
-                } else {
-                    // komunikat !
-                    echo '<br/>Aplikacja napotkała błąd podczas wczytywania pliku. Sprawdź czy wybrałeś do wczytania prawidłowy plik CSV.<br/>';
-                };
-            } else {
-                // komunikat !
-                echo '<br/>Wczytywany plik CSV może mieć rozmiar maks. 10MB. Jeżeli potrzebujesz skonwertować więcej danych skontaktuj się z administratorem<br/>';
+                        ) {
+                            $this->database = new Database($this->getInputFileName(), self::$config['maxCsvLineLength']);
+
+                            $this->converter = new Converter($this->database->getRawData(), $this->request->postParams());
+
+                            $this->creator = new Creator($this->converter->getConvertedProducts(), self::$config['downloadDir']);
+                        } else {
+                            error_log(date("Y-m-d H:i:s") . ' Controller init conversion upload error: uploaded file exceeds upload max file size in config - file size: ' . $this->request->filesParam('shoper-csv')['size'] . " bytes;\n", 3, 'src/logs/errors.log');
+                            header("Location: \?error=fileSize");
+                            exit;
+                        };
+                    } else {
+                        error_log(date("Y-m-d H:i:s") . ' Controller init conversion upload error: uploaded file is not CSV type' . ";\n", 3, 'src/logs/errors.log');
+                        header("Location: \?error=fileType");
+                        exit;
+                    }
+                    break;
+                case 4:
+                    error_log(date("Y-m-d H:i:s") . ' Controller init conversion file upload error no. 4: no file was uploaded' . ";\n", 3, 'src/logs/errors.log');
+                    header("Location: \?error=noFileUploaded");
+                    exit;
+                    break;
+                default:
+                    error_log(date("Y-m-d H:i:s") . ' Controller init conversion upload error no. ' .  $this->request->filesParam('shoper-csv')['error'] . ";\n", 3, 'src/logs/errors.log');
+                    header("Location: \?error=uploadFailed");
+                    exit;
+                    break;
             }
         }
     }

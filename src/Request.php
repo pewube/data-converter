@@ -22,13 +22,28 @@ class Request
         return $this->get[$name] ?? $default;
     }
 
+    public function getParams(): array
+    {
+        return $this->get ?? [];
+    }
+
     public function postParam(string $name, $default = null)
     {
         return $this->post[$name] ?? $default;
     }
 
+    public function postParams(): array
+    {
+        return $this->post ?? [];
+    }
+
     public function filesParam(string $name, $default = null)
     {
         return $this->files[$name] ?? $default;
+    }
+
+    public function filesParams(): array
+    {
+        return $this->files ?? [];
     }
 }

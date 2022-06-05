@@ -25,5 +25,6 @@ return [
     'conversionPhotos' => 'Problem z konwersją adresów URL zdjęć produktów.<br>Sprawdź zgodność wczytywanego pliku CSV z instrukcjami na stronie.',
     'conversionMetaKeywords' => 'Problem z konwersją słów kluczowych meta.<br>Sprawdź zgodność wczytywanego pliku CSV z instrukcjami na stronie.',
     'conversionTags' => 'Problem z konwersją tagów.<br>Sprawdź zgodność wczytywanego pliku CSV z instrukcjami na stronie.',
+    'conversionSort' => 'Problem z sortowaniem kolumn.<br>Sprawdź zgodność wczytywanego pliku CSV z instrukcjami na stronie.',
     'saveData' => 'Problem z zapisem wynikowego pliku CSV. Spróbuj ponownie.<br> Jeżeli problem się powtarza skontaktuj się z administratorem.',
 ];

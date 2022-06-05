@@ -33,6 +33,7 @@ class Converter
                 $product = $this->photos($product, $params);
                 $product = $this->metaKeywords($product);
                 $product = $this->tags($product);
+                $product = $this->sort($product);
                 $this->products[$index] = $product;
             }
         } catch (Throwable $e) {
@@ -105,12 +106,12 @@ class Converter
             $styles = isset($params['copy-styles']) ? true : false;
             $bold = isset($params['copy-bold']) ? true : false;
 
-            $htmlTagsAllowed = '<p><a><ul><ol><li><br><span><table><tr><th><td><thead><tbody><tfoot>';
+            $htmlTagsAllowed = '<p><a><ul><ol><li><table><tr><th><td><thead><tbody><tfoot><br>';
             if ($images) {
                 $htmlTagsAllowed .= '<img>';
             };
             if ($styles) {
-                $htmlTagsAllowed .= '<h1><h2><h3><h4><h5><h6><div><blockquote><code><mark><q><sub><sup><hr><abbr><cite><code><del><dfn><s><samp><figure><figcaption><small><ins><kbd><dl><dt><dd><pre><u><em><i><b><strong>';
+                $htmlTagsAllowed .= '<span><h1><h2><h3><h4><h5><h6><div><blockquote><code><mark><q><sub><sup><hr><abbr><cite><code><del><dfn><s><samp><figure><figcaption><small><ins><kbd><dl><dt><dd><pre><u><em><i><b><strong>';
             };
             if ($bold && !$styles) {
                 $htmlTagsAllowed .= '<b><strong>';
@@ -122,13 +123,14 @@ class Converter
             }
 
             $product['description_short'] = $product['description_short'] ? strip_tags($product['description_short'], $htmlTagsAllowed) : "";
-            $product['description_short'] = preg_replace("/\s{2,}/", " ", $product['description_short']);
+            $product['description_short'] = str_replace("\xc2\xa0", ' ', $product['description_short']);
+            $product['description_short'] = preg_replace("/\s{2,}/", ' ', $product['description_short']);
 
             if (!$styles) {
                 $product['description_short'] = preg_replace('/\s{1,}style=".*?"\s*/i', "", $product['description_short']);
             }
 
-            $product['description_short'] = str_replace(["\xc2\xa0", ' <p> </p>', '<p> </p>', '<p> </p> ', ' <p></p>', '<p></p>', '<p></p> '], '', $product['description_short']);
+            $product['description_short'] = str_replace([' <p> </p>', '<p> </p>', '<p> </p> ', ' <p></p>', '<p></p>', '<p></p> '], '', $product['description_short']);
             $product['description_short'] = trim($product['description_short']);
 
             if ($images) {
@@ -150,12 +152,12 @@ class Converter
             $styles = isset($params['copy-styles']) ? true : false;
             $bold = isset($params['copy-bold']) ? true : false;
 
-            $htmlTagsAllowed = '<p><a><ul><ol><li><br><span><table><tr><th><td><thead><tbody><tfoot>';
+            $htmlTagsAllowed = '<p><a><ul><ol><li><table><tr><th><td><thead><tbody><tfoot><br>';
             if ($images) {
                 $htmlTagsAllowed .= '<img>';
             };
             if ($styles) {
-                $htmlTagsAllowed .= '<h1><h2><h3><h4><h5><h6><div><blockquote><code><mark><q><sub><sup><hr><abbr><cite><code><del><dfn><s><samp><figure><figcaption><small><ins><kbd><dl><dt><dd><pre><u><em><i><b><strong>';
+                $htmlTagsAllowed .= '<span><h1><h2><h3><h4><h5><h6><div><blockquote><code><mark><q><sub><sup><hr><abbr><cite><code><del><dfn><s><samp><figure><figcaption><small><ins><kbd><dl><dt><dd><pre><u><em><i><b><strong>';
             };
             if ($bold && !$styles) {
                 $htmlTagsAllowed .= '<b><strong>';
@@ -167,13 +169,14 @@ class Converter
             }
 
             $product['description'] = $product['description'] ? strip_tags($product['description'], $htmlTagsAllowed) : '';
-            $product['description'] = preg_replace("/\s{2,}/", " ", $product['description']);
+            $product['description'] = str_replace("\xc2\xa0", ' ', $product['description']);
+            $product['description'] = preg_replace("/\s{2,}/", ' ', $product['description']);
 
             if (!$styles) {
                 $product['description'] = preg_replace('/\s{1,}style=".*?"\s*/i', "", $product['description']);
             }
 
-            $product['description'] = str_replace(["\xc2\xa0", ' <p> </p>', '<p> </p>', '<p> </p> ', ' <p></p>', '<p></p>', '<p></p> '], '', $product['description']);
+            $product['description'] = str_replace([' <p> </p>', '<p> </p>', '<p> </p> ', ' <p></p>', '<p></p>', '<p></p> '], '', $product['description']);
             $product['description'] = trim($product['description']);
 
             if ($images) {
@@ -237,6 +240,39 @@ class Converter
         } catch (Throwable $e) {
             error_log(date("Y-m-d H:i:s") . ' Converter tags error: ' . $e->getMessage() . ";\n", 3, 'src/logs/errors.log');
             header("Location: \?error=conversionTags");
+            exit;
+        }
+    }
+
+    private function sort(array $product): array
+    {
+        try {
+            $sortedProduct = [];
+            $sortedProduct['product_reference'] = $product['product_reference'];
+            $sortedProduct['active'] = $product['active'];
+            $sortedProduct['category'] = $product['category'];
+            $sortedProduct['name'] = $product['name'];
+            $sortedProduct['price_tax_included'] = $product['price_tax_included'];
+            $sortedProduct['tax_id'] = $product['tax_id'];
+            $sortedProduct['unit'] = $product['unit'];
+            $sortedProduct['brand'] = $product['brand'];
+            $sortedProduct['weight'] = $product['weight'];
+            $sortedProduct['description_short'] = $product['description_short'];
+            $sortedProduct['description'] = $product['description'];
+            $sortedProduct['stock'] = $product['stock'];
+            $sortedProduct['low_stock_level'] = $product['low_stock_level'];
+            $sortedProduct['low_stock_email_alert'] = $product['low_stock_email_alert'];
+            $sortedProduct['delivery_time'] = $product['delivery_time'];
+            $sortedProduct['photo_urls'] = $product['photo_urls'];
+            $sortedProduct['meta_description'] = $product['meta_description'];
+            $sortedProduct['meta_title'] = $product['meta_title'];
+            $sortedProduct['meta_keywords'] = $product['meta_keywords'];
+            $sortedProduct['tags'] = $product['tags'];
+            $sortedProduct['ean13'] = $product['ean13'];
+            return $sortedProduct;
+        } catch (Throwable $e) {
+            error_log(date("Y-m-d H:i:s") . ' Converter sort error: ' . $e->getMessage() . ";\n", 3, 'src/logs/errors.log');
+            header("Location: \?error=conversionSort");
             exit;
         }
     }

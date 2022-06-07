@@ -6,9 +6,9 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Konwerter danych</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@20..48,100..700,0..1,-50..200" />
+    <link rel="shortcut icon" href="/assets/img/favicon.ico" type="image/x-icon" />
     <link rel="stylesheet" href="/assets/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/assets/css/style.css">
+    <link rel="stylesheet" href="/assets/css/style.min.css">
 </head>
 
 <body>
@@ -17,9 +17,9 @@
             <span class="visually-hidden">Loading...</span>
         </div>
     </div>
-    <header>
-        <div class="d-flex position-relative justify-content-center my-4 ">
-            <div>
+    <header class="container-sm">
+        <div class="d-flex position-relative justify-content-center pb-4 my-4 border-bottom">
+            <div class="text-center">
                 <h1>Konwerter danych</h1>
                 <h2>Shoper <span class="fs-1 text-primary">&#8669;</span> PrestaShop</h2>
                 <a href="/" class="stretched-link"></a>
@@ -31,13 +31,17 @@
         require_once("./templates/pages/$page.php");
         ?>
     </main>
-    <footer></footer>
+
+    <footer class="container-sm d-flex flex-wrap justify-content-center py-4 mt-5 border-top">
+        <p class="text-center text-muted mb-1 mx-2">© <?php echo date("Y") ?> pewube.eu</p>
+        <address class="text-center text-muted mb-1 mx-2"><a class="link-secondary" href="mailto:kontakt@pewube.eu">kontakt@pewube.eu</a></address>
+    </footer>
     <?php
     require_once("./templates/pages/modal.php");
     ?>
 
     <script src="/assets/js/bootstrap.bundle.min.js"></script>
-    <script src="/assets/js/converter.js"></script>
+    <script src="/assets/js/converter.min.js"></script>
     <script src="https://www.google.com/recaptcha/api.js" async defer></script>
 </body>
 

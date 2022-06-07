@@ -75,6 +75,9 @@ class Converter
                     case '0%':
                         $product['tax_id'] = '4';
                         break;
+                    default:
+                        $product['tax_id'] = '4';
+                        break;
                 }
                 unset($product['tax_rate']);
                 return $product;
@@ -164,8 +167,8 @@ class Converter
             };
 
             if (!$styles) {
-                $product['description'] = str_replace(['<h1', '<h2', '<h3', '<h4', '<h5', '<h6'], '<p', $product['description_short']);
-                $product['description'] = str_replace(['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</h6>'], '</p>', $product['description_short']);
+                $product['description'] = str_replace(['<h1', '<h2', '<h3', '<h4', '<h5', '<h6'], '<p', $product['description']);
+                $product['description'] = str_replace(['</h1>', '</h2>', '</h3>', '</h4>', '</h5>', '</h6>'], '</p>', $product['description']);
             }
 
             $product['description'] = $product['description'] ? strip_tags($product['description'], $htmlTagsAllowed) : '';

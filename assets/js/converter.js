@@ -73,7 +73,6 @@ function collapseIfCheckboxChecked(controlElement) {
       targetElement.classList.remove("show");
       targetInput.removeAttribute("required");
       controlElement.setAttribute("aria-expanded", "false");
-      console.log(targetInput);
     }
   }
 }

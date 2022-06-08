@@ -31,6 +31,7 @@ class Converter
                 $product = $this->descriptionShort($product, $params);
                 $product = $this->description($product, $params);
                 $product = $this->photos($product, $params);
+                $product = $this->deactivateProduct($product, $params);
                 $product = $this->metaKeywords($product);
                 $product = $this->tags($product);
                 $product = $this->sort($product);
@@ -217,6 +218,20 @@ class Converter
         } catch (Throwable $e) {
             error_log(date("Y-m-d H:i:s") . ' Converter photos error: ' . $e->getMessage() . ";\n", 3, 'src/logs/errors.log');
             header("Location: \?error=conversionPhotos");
+            exit;
+        }
+    }
+
+    private function deactivateProduct(array $product, array $params): array
+    {
+        try {
+            if (isset($params['deactivate-product'])) {
+                $product['active'] = 0;
+            }
+            return $product;
+        } catch (Throwable $e) {
+            error_log(date("Y-m-d H:i:s") . ' Converter deactivateProduct error: ' . $e->getMessage() . ";\n", 3, 'src/logs/errors.log');
+            header("Location: \?error=conversionDeactivate");
             exit;
         }
     }

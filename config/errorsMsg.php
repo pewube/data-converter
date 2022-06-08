@@ -23,6 +23,7 @@ return [
     'conversionDescShort' => 'Problem z konwersją podsumowania produktu.<br>Sprawdź zgodność wczytywanego pliku CSV z instrukcjami na stronie.',
     'conversionDescription' => 'Problem z konwersją opisu produktu.<br>Sprawdź zgodność wczytywanego pliku CSV z instrukcjami na stronie.',
     'conversionPhotos' => 'Problem z konwersją adresów URL zdjęć produktów.<br>Sprawdź zgodność wczytywanego pliku CSV z instrukcjami na stronie.',
+    'conversionDeactivate' => 'Problem z dezaktywacją produktów.<br>Sprawdź zgodność wczytywanego pliku CSV z instrukcjami na stronie.',
     'conversionMetaKeywords' => 'Problem z konwersją słów kluczowych meta.<br>Sprawdź zgodność wczytywanego pliku CSV z instrukcjami na stronie.',
     'conversionTags' => 'Problem z konwersją tagów.<br>Sprawdź zgodność wczytywanego pliku CSV z instrukcjami na stronie.',
     'conversionSort' => 'Problem z sortowaniem kolumn.<br>Sprawdź zgodność wczytywanego pliku CSV z instrukcjami na stronie.',

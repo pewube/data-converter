@@ -70,6 +70,7 @@ class Controller
                     'copy-pictures' => $this->request->getParam('copy-pictures'),
                     'copy-styles' => $this->request->getParam('copy-styles'),
                     'copy-bold' => $this->request->getParam('copy-bold'),
+                    'deactivate-product' => $this->request->getParam('deactivate-product'),
                 ];
                 break;
         }

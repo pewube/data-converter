@@ -4,15 +4,6 @@ declare(strict_types=1);
 
 namespace App;
 
-require_once('View.php');
-require_once('Request.php');
-require_once('Database.php');
-require_once('Converter.php');
-require_once('Creator.php');
-require_once('Validator.php');
-
-
-
 class Controller
 {
     private static array $config = [];
